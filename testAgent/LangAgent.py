@@ -35,7 +35,7 @@ class GeneralPurposeLLM:
         agent = create_agent(
             model = self.llm,
             system_prompt = self.instruction,
-            #response_format = ChatResponse,
+            response_format = ChatResponse,
             checkpointer = self.memory,
             #response_format=ChatResponse
             )
@@ -55,12 +55,18 @@ class GeneralPurposeLLM:
         # extract the messages
         messages = state.values.get("messages", [])
 
-        # get the AI message
-        for msg in reversed(messages):           
-            if isinstance(msg, AIMessage):
-                return msg.content
-            else:
-                return None      
+        result = state.values.get("structured_response")
+
+        if isinstance(result, ChatResponse):
+            return result.content
+
+        return None
+        # # get the AI message
+        # for msg in reversed(messages):           
+        #     if isinstance(msg, AIMessage):
+        #         return msg.content
+        #     else:
+        #         return None      
 
 
 
